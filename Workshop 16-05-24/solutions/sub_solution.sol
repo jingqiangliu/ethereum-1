@@ -1,17 +1,17 @@
 contract Subscription {
     
     /* indicates wether the subscription is still active */
-    bool active;
+    bool public active;
     /* timestamp of the next not-yet-collected payment */
-    uint nextPayment;
+    uint public nextPayment;
     /* amount of wei that needs to be paid for each time period */
-    uint price;
+    uint public price;
     /* duration of a time period */
-    uint time;
+    uint public time;
     /* recipient of the payments */
-    address recipient;
+    address public recipient;
     /* creator of the contract */
-    address creator;
+    address public creator;
     
     /* event when there is not enough wei to collect */
     event FailedToPay();
@@ -42,7 +42,7 @@ contract Subscription {
     
     /// @dev send one payment to the recipient if possible
     /* uses require_active modifier */
-    function collect() require_active {
+    function collect() require_active returns(bool) {
         /* check if a payment is due */
         if(block.timestamp >= nextPayment) {
             /* check if too little wei is in the contract */
@@ -56,16 +56,18 @@ contract Subscription {
                 recipient.send(price);
                 /* emit Paid event */
                 Paid();
+                return true;
             }
         } else {
             /* logging error */
             log0("too soon");
         }
+        return false;
     }
     
     /// @dev cancel the subscription, works only if there is no payment due    
     /* uses require_active modifier */
-    function cancel() require_active {
+    function cancel() require_active returns(bool) {
         /* check if sender is the creator */
         if(msg.sender == creator) {
             /* check if no payment is due */
@@ -76,8 +78,10 @@ contract Subscription {
                 creator.send(this.balance);
                 /* emit Cancelled event */
                 Cancelled();
+                return true;
             }
         }
+        return false;
     }
     
 }
