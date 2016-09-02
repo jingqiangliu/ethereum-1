@@ -1,1 +1,1 @@
-Unfortunately all the presentation from this meetup were list
+Unfortunately all the presentations from this meetup were lost
