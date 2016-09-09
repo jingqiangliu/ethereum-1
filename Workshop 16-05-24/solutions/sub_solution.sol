@@ -53,7 +53,7 @@ contract Subscription {
                 /* set the nextPayment timestamp for the next payment */
                 nextPayment += time;
                 /* send the money to the recipient */
-                recipient.send(price);
+                if (!recipient.send(price)) throw;
                 /* emit Paid event */
                 Paid();
                 return true;
@@ -75,7 +75,7 @@ contract Subscription {
                 /* mark the subscription as cancelled */
                 active = false;
                 /* send remaining wei back to creator */
-                creator.send(this.balance);
+                if(!creator.send(this.balance)) throw;
                 /* emit Cancelled event */
                 Cancelled();
                 return true;

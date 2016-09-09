@@ -2,6 +2,10 @@ contract Market {
     
     /* Status enum for the 3 possible states */
     enum Status { OFFERED, TAKEN, CONFIRMED}
+
+    event OfferAdded(uint indexed id, string indexed product, uint indexed price);
+    event OfferTaken(uint indexed id);
+    event OfferConfirmed(uint indexed id);
     
     /* Struct for storing an offer */
     struct Offer {
@@ -30,6 +34,7 @@ contract Market {
             creator: msg.sender, /* sender is the creator */
             taker: 0 /* set taker 0 for now */
         }));
+        OfferAdded(id, product_, price_);
         /* return the id */
         return id;
     }
@@ -48,6 +53,8 @@ contract Market {
         offer.status = Status.TAKEN;
         /* set taker */
         offer.taker = msg.sender;
+
+        OfferTaken(id);
     }
     
     /// @dev confirm a shipment
@@ -63,7 +70,9 @@ contract Market {
         /* set status to confirmed */
         offer.status = Status.CONFIRMED;
         /* send the ether to the offer creator */
-        offer.creator.send(offer.price);
+        if(!offer.creator.send(offer.price)) throw;
+
+        OfferConfirmed(id);
     }
     
 }

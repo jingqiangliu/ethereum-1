@@ -38,7 +38,7 @@ contract Feed {
             throw;
         }
         /* forward the ether to the creator */
-        creator.send(msg.value);
+        if(!creator.send(msg.value)) throw;
         /* return the value */
         return value;
     }
