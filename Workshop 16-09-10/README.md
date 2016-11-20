@@ -1,0 +1,1 @@
+Resources now obsolete - see the latest workshop
