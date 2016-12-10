@@ -1,0 +1,6 @@
+Starting geth correctly:
+
+> geth --dev --rpc --rpccorsdomain '*' --ipcpath /path/to/standard/datadir/geth.ipc console
+
+Enabling CORS on IPFS:
+> ipfs config --json API.HTTPHeaders.Access-Control-Allow-Origin "[\"http://localhost:8000\"]"
